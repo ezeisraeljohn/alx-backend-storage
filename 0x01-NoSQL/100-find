@@ -1,0 +1,2 @@
+// 100 Find the based on regex
+db.school.find({name: {"$regex": /^Holberton/}})
