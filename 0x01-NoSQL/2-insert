@@ -1,3 +1,2 @@
 // inserts into the database
-let result = db.collection.insertOne({ name: 'Alice', age: 30 });
-print(`WriteResult({ "nInserted" : ${result.acknowledged ? 1 : 0} })`);
+db.school.insert( { name: 'Holberton school' } );
