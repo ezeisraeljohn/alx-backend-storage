@@ -13,8 +13,8 @@ class Cache:
 
     def __init__(self) -> None:
         """The Init Method"""
-        self.__redis = redis.Redis()
-        self.__redis.flushdb()
+        self._redis = redis.Redis()
+        self._redis.flushdb()
 
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """Returns a the key of a stored value
@@ -26,5 +26,5 @@ class Cache:
             str: Returns the key representing the value stored in the db
         """
         key = uuid.uuid4()
-        self.__redis.set(str(key), data)
+        self._redis.set(str(key), data)
         return str(key)
