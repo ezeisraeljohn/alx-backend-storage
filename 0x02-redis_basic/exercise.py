@@ -4,7 +4,7 @@
 
 
 import redis
-from typing import Union
+from typing import Union, Callable, Any
 import uuid
 
 
@@ -28,3 +28,23 @@ class Cache:
         key = uuid.uuid4()
         self._redis.set(str(key), data)
         return str(key)
+
+    def get(self, key: str, fn: Union[Callable] = None) -> Any:
+        """Returns a value to its original type
+
+        Args:
+            key (_type_): _description_
+            fn (Union[Callable], optional): The original callable. Defaults
+            to None.
+
+            Returns:
+                Any: Returns the original rep of the data
+        """
+
+        value = self._redis.get(key)
+
+        if value and not fn:
+            return value
+
+        if fn:
+            return fn(value)
