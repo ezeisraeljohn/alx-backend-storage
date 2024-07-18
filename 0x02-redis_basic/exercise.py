@@ -16,8 +16,16 @@ class Cache:
         """The Init Method"""
         self._redis = redis.Redis()
         self._redis.flushdb()
-        self.store = self.count_calls(self.store)
 
+    def count_calls(method: Callable) -> Callable:
+        @wraps(method)
+        def wrapper(self, *args, **kwargs):
+            self._redis.incr(method.__qualname__, 1)
+            return method(self, *args, **kwargs)
+
+        return wrapper
+
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """Returns a the key of a stored value
 
@@ -76,11 +84,3 @@ class Cache:
         """
         value = self.get(self, key, fn)
         return int(value)
-
-    def count_calls(self, method: Callable) -> Callable:
-        @wraps(method)
-        def wrapper(*args, **kwargs):
-            self._redis.incr(method.__qualname__, 1)
-            return method(*args, **kwargs)
-
-        return wrapper
