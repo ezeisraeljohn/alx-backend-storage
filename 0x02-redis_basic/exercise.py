@@ -19,22 +19,8 @@ class Cache:
         self.store = self.count_calls(self.store)
 
     def count_calls(self, method: Callable) -> Callable:
-        """This decorator counts how many times a method is called
-        Args:
-            method (Callable): The method called
-        """
-
         @wraps(method)
         def wrapper(*args, **kwargs):
-            """The function that wraps the callable
-
-            Args:
-                key (_type_): The key to increament
-                fn (function): any other callable
-
-            Returns:
-                _type_: returns the result of the method
-            """
             self._redis.incr(method.__qualname__, 1)
             return method(*args, **kwargs)
 
