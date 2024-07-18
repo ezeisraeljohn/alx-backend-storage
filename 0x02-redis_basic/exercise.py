@@ -48,3 +48,29 @@ class Cache:
 
         if fn:
             return fn(value)
+
+    def get_str(self, key: str, fn) -> str:
+        """This will return the string rep of the value
+
+        Args:
+            key (str): The key used to save the value
+            fn (function): The Callable
+
+        Returns:
+            str: The string to return
+        """
+        value = self.get(key, fn)
+        return str(value)
+
+    def get_int(self, key: str, fn: Union[Callable] = None) -> int:
+        """Returns a value for this function
+
+        Args:
+            key (str): The key
+            fn (Union[Callable], optional): The callable. Defaults to None.
+
+        Returns:
+            int: returns an int
+        """
+        value = self.get(self, key, fn)
+        return int(value)
