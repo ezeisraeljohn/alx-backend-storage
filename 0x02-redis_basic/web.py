@@ -14,6 +14,6 @@ def get_page(url: str) -> str:
     """
     response = requests.get(url=url)
     redis_instance = redis.Redis()
-    redis_instance.incr(f"count:{url}", 1)
+    redis_instance.incr("count:{}".format(url), 1)
     redis_instance.expire(f"count:{url}", 10)
     return response.text
