@@ -17,10 +17,6 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
-    @property
-    def redis_instance(self):
-        return self._redis
-
     def call_history(method: Callable[..., Any]) -> Callable[..., Any]:
         @wraps(method)
         def wrapper(self, *args, **kwargs):
