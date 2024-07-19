@@ -102,7 +102,15 @@ class Cache:
         return int(value)
 
 
-def replay(method: Callable[..., Any]) -> Callable:
+def replay(method: Callable[..., Any]) -> None:
+    """Tells you all the transaction that has been going on for a method
+
+    Args:
+        method (Callable[..., Any]): The method
+
+    Returns:
+        None
+    """
     redis_instance = redis.Redis()
     input_key = "{}:inputs".format(method.__qualname__)
     output_key = "{}:outputs".format(method.__qualname__)
