@@ -17,6 +17,10 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @property
+    def redis_instance(self):
+        return self._redis
+
     def call_history(method: Callable[..., Any]) -> Callable[..., Any]:
         @wraps(method)
         def wrapper(self, *args, **kwargs):
@@ -96,3 +100,18 @@ class Cache:
         """
         value = self.get(self, key, fn)
         return int(value)
+
+
+def replay(method: Callable[..., Any]) -> Callable:
+    redis_instance = redis.Redis()
+    input_key = "{}:inputs".format(method.__qualname__)
+    output_key = "{}:outputs".format(method.__qualname__)
+    inputs = redis_instance.lrange(input_key, 0, -1)
+    outputs = redis_instance.lrange(output_key, 0, -1)
+    class_method = "Cache.store"
+    print("{} was called {} times:".format(class_method, len(inputs)))
+
+    for elements in zip(inputs, outputs):
+        new_input = elements[0].decode("utf-8")
+        new_output = elements[1].decode("utf-8")
+        print("{}(*{}) -> {}".format(class_method, new_input, new_output))
