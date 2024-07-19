@@ -7,8 +7,25 @@ import functools
 
 
 def my_decorator(method: Callable) -> Any:
+    """Decorates a function to store a cache.
+
+    Args:
+        method (Callable): The method.
+
+    Returns:
+        Any: Any
+    """
+
     @functools.wraps(method)
     def wrapper(url):
+        """Function that really does the decoration
+
+        Args:
+            url (_type_): The url
+
+        Returns:
+            _type_: return the method
+        """
         redis_instance = redis.Redis()
         redis_instance.incr("count:{}".format(url), 1)
         redis_instance.expire("count:{}".format(url), 10)
