@@ -26,7 +26,9 @@ class Cache:
         def wrapper(self, *args, **kwargs):
             inputs = str(args)
             outputs = method(self, inputs)
-            self._redis.rpush("{}:outputs".format(method.__qualname__), outputs)
+            self._redis.rpush(
+                "{}:outputs".format(method.__qualname__),
+                outputs)
             self._redis.rpush("{}:inputs".format(method.__qualname__), inputs)
             return outputs
 
@@ -118,7 +120,6 @@ def replay(method: Callable[..., Any]) -> None:
     outputs = redis_instance.lrange(output_key, 0, -1)
     class_method = "Cache.store"
     print("{} was called {} times:".format(class_method, len(inputs)))
-
     for elements in zip(inputs, outputs):
         new_input = elements[0].decode("utf-8")
         new_output = elements[1].decode("utf-8")
