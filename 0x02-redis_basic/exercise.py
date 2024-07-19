@@ -18,14 +18,6 @@ class Cache:
         self._redis.flushdb()
 
     def call_history(method: Callable[..., Any]) -> Any:
-            """Show the history of every call of the method @method
-
-            Args:
-                method (Callable[..., Any]): The method
-
-            Returns:
-                Any: Returns any
-            """
         @wraps(method)
         def wrapper(self, *args, **kwargs):
             inputs = str(args)
@@ -39,14 +31,6 @@ class Cache:
         return wrapper
 
     def count_calls(method: Callable[..., Any]) -> Any:
-        """Count how many times a method of a class is called
-
-            Args:
-                method (Callable[..., Any]): The method
-
-            Returns:
-                Any: Returns any
-            """
         @wraps(method)
         def wrapper(self, *args, **kwargs):
             self._redis.incr(method.__qualname__, 1)
